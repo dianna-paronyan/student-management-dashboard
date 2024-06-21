@@ -15,7 +15,7 @@ cd .. Tomo-task
 ```
 
 ### Backend (NodeJS)
-Change to the project directory:
+Change to the server directory:
 ```
 cd ./server
 ```
@@ -42,7 +42,7 @@ nodemon server.js
 ```
 
 ### Frontend (ReactJS)
-Change to the project directory:
+Change to the client directory:
 ```
 cd ./client
 ```
