@@ -52,8 +52,8 @@ class StudentModel {
             return students.rows.map(row => ({
                 id: row.student_id,
                 email: row.student_email,
-                firstName: row.student_firstName,
-                lastName: row.student_lastName,
+                firstName: row.student_firstname,
+                lastName: row.student_lastname,
                 age: row.student_age,
                 Country: {
                     id: row.country_id,
@@ -107,8 +107,8 @@ class StudentModel {
             return {
                 id: student.rows[0].student_id,
                 email: student.rows[0].student_email,
-                firstName: student.rows[0].student_firstName,
-                lastName: student.rows[0].student_lastName,
+                firstName: student.rows[0].student_firstname,
+                lastName: student.rows[0].student_lastname,
                 age: student.rows[0].student_age,
                 Country: {
                     id: student.rows[0].country_id,

@@ -50,6 +50,19 @@ class CityModel {
             throw error;
         }
     }
+
+    async getAllCitiesByCountryId(countryId) {
+        try {
+            const cities = await db.query(
+                `SELECT * FROM cities WHERE countryId = $1`,
+                [countryId]
+            );
+
+            return cities.rows;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = new CityModel();

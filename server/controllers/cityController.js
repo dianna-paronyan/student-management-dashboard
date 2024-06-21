@@ -42,6 +42,17 @@ class CityController {
             res.status(500).json({error: error.message});
         }
     }
+
+    async getAllCitiesByCountryId(req, res) {
+        const { countryId } = req.params;
+
+        try {
+            const cities = await CityModel.getAllCitiesByCountryId(countryId);
+            res.status(200).json(cities);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
 }
 
 module.exports = new CityController();
