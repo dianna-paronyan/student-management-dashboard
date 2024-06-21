@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import Country from "../../models/countryModel.ts";
 import City from "../../models/cityModel.ts";
+import {toast} from "react-toastify";
 
 function EditStudent() {
     const {id} = useParams();
@@ -123,7 +124,9 @@ function EditStudent() {
                 cityId: formData.cityId
             };
             await StudentService.updateStudent(studentData, studentData.id);
+            toast.success('Student updated successfully');
         } catch (error) {
+            toast.error('Failed to update student');
             console.error(error);
         }
     }

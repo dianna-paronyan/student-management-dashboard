@@ -15,6 +15,7 @@ import CountryService from "../../services/countryService.ts";
 import StudentService from "../../services/studentService.ts";
 import Country from "../../models/countryModel.ts";
 import City from "../../models/cityModel.ts";
+import {toast} from "react-toastify";
 
 function AddStudent() {
     const [countries, setCountries] = useState<Country[]>([]);
@@ -89,6 +90,7 @@ function AddStudent() {
             };
 
             await StudentService.createStudent(studentData);
+            toast.success('Student added successfully');
             setFormData({
                 email: '',
                 password: '',
@@ -102,6 +104,7 @@ function AddStudent() {
             setCities([]);
         } catch (error) {
             console.error(error);
+            toast.error('Failed to add student');
         }
     }
 
