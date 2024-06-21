@@ -1,12 +1,11 @@
 import './App.css'
+import AppRoutes from "./routes/AppRoutes.tsx";
 
 function App() {
 
-  return (
-    <>
-
-    </>
-  )
+    return (
+        <AppRoutes/>
+    )
 }
 
 export default App
