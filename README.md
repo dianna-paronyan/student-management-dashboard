@@ -1,7 +1,7 @@
 # Mini Dashboard for Managing Students’ Accounts
 
 ## Description
-This web application allows users to create, edit, and list student profiles. It includes functionality to search for students by first name.
+This web application allows users to create, edit, and list student profiles. It includes functionality to search for students by first name and incorporates pagination, allowing to navigate through multiple pages.
 
 ## Installation
 
