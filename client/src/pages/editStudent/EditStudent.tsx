@@ -124,10 +124,9 @@ function EditStudent() {
                 cityId: formData.cityId
             };
             await StudentService.updateStudent(studentData, studentData.id);
-            toast.success('Student updated successfully');
-        } catch (error) {
-            toast.error('Failed to update student');
-            console.error(error);
+            toast.success("Student updated successfully");
+        } catch (error: any) {
+            toast.error(error.response.data.errors ? error.response.data?.errors[0].msg : "Failed to update student");
         }
     }
 

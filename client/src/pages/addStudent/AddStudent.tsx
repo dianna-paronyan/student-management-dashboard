@@ -90,7 +90,7 @@ function AddStudent() {
             };
 
             await StudentService.createStudent(studentData);
-            toast.success('Student added successfully');
+            toast.success("Student added successfully");
             setFormData({
                 email: '',
                 password: '',
@@ -102,9 +102,8 @@ function AddStudent() {
             });
             setSelectedCountry(undefined);
             setCities([]);
-        } catch (error) {
-            console.error(error);
-            toast.error('Failed to add student');
+        } catch (error: any) {
+            toast.error(error.response.data.errors ? error.response.data?.errors[0].msg : "Failed to add student");
         }
     }
 
