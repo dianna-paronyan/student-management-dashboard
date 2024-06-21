@@ -18,6 +18,7 @@ cd .. Tomo-task
 Change to the project directory:
 ```
 cd ./server
+```
 
 Install the dependencies:
 ```
@@ -44,7 +45,7 @@ nodemon server.js
 Change to the project directory:
 ```
 cd ./client
-
+```
 Install the dependencies:
 ```
 npm install
