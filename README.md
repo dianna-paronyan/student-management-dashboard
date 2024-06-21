@@ -11,7 +11,7 @@ git clone https://github.com/dianna-paronyan/student-management-dashboard.git
 ```
 Change to the project directory:
 ```
-cd .. Tomo-task
+cd ./student-management-dashboard
 ```
 
 ### Backend (NodeJS)
