@@ -4,10 +4,10 @@ import {Student} from "../models/studentModel.ts";
 
 function StudentService() {
 
-    async function getStudents() {
+    async function getStudents(page: number, limit: number) {
         try {
-            const students = await httpService.get(urls.STUDENTS);
-            return students;
+            const response = await httpService.get(`${urls.STUDENTS}?page=${page}&limit=${limit}`);
+            return response;
         } catch (error) {
             throw error;
         }

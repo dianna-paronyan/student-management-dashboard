@@ -9,26 +9,21 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow, TextField
+    TableRow,
+    TextField,
+    TablePagination
 } from "@mui/material";
 import {Edit as EditIcon, Delete as DeleteIcon} from '@mui/icons-material';
 import {useNavigate} from "react-router-dom";
 import {Student} from "../../models/studentModel.ts";
 
 function Dashboard() {
-
     const [students, setStudents] = useState<Student[]>([]);
     const [searchByName, setSearchByName] = useState<string>("");
+    const [page, setPage] = useState(0);
+    const [limit, setLimit] = useState(10);
+    const [totalStudents, setTotalStudents] = useState(0);
     const navigate = useNavigate();
-
-    async function getStudents() {
-        try {
-            const studentsData = await StudentService.getStudents();
-            setStudents(studentsData);
-        } catch (error) {
-            console.error(error);
-        }
-    }
 
     useEffect(() => {
         async function fetchStudentsData() {
@@ -36,12 +31,21 @@ function Dashboard() {
         }
 
         fetchStudentsData().catch(error => console.log(error));
+    }, [page, limit]);
 
-    }, [])
+    async function getStudents() {
+        try {
+            const response = await StudentService.getStudents(page + 1, limit);
+            setStudents(response.students);
+            setTotalStudents(response.totalCount);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const filteredStudents = students?.filter((student: Student) =>
         student.firstName?.toLowerCase().includes(searchByName?.toLowerCase())
-    )
+    );
 
     function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
         setSearchByName(event.target.value);
@@ -51,13 +55,22 @@ function Dashboard() {
         navigate('/add-student');
     }
 
-    function navigateTiEditStudent(id: number | undefined) {
+    function navigateToEditStudent(id: number | undefined) {
         navigate(`edit-student/${id}`);
     }
 
-    function deleteStudent(id: number | undefined) {
+    function handleDeleteStudent(id: number | undefined) {
         console.log(id);
     }
+
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setLimit(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     return (
         <div>
@@ -69,7 +82,7 @@ function Dashboard() {
                     onChange={handleSearchChange}
                     style={{marginRight: '20px'}}
                 />
-                <Button variant="contained" color="primary" onClick={() => navigateToAddStudent()}>
+                <Button variant="contained" color="primary" onClick={navigateToAddStudent}>
                     Add Student
                 </Button>
             </div>
@@ -96,10 +109,10 @@ function Dashboard() {
                                 <TableCell>{student.Country ? student.Country.name : ''}</TableCell>
                                 <TableCell>{student.City ? student.City.name : ''}</TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => navigateTiEditStudent(student.id ?? undefined)}>
+                                    <IconButton onClick={() => navigateToEditStudent(student.id ?? undefined)}>
                                         <EditIcon/>
                                     </IconButton>
-                                    <IconButton onClick={() => deleteStudent(student.id ?? undefined)}>
+                                    <IconButton onClick={() => handleDeleteStudent(student.id ?? undefined)}>
                                         <DeleteIcon/>
                                     </IconButton>
                                 </TableCell>
@@ -108,8 +121,17 @@ function Dashboard() {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <TablePagination
+                rowsPerPageOptions={[10, 20, 50]}
+                component="div"
+                count={totalStudents}
+                rowsPerPage={limit}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
         </div>
-    )
+    );
 }
 
 export default Dashboard;

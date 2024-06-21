@@ -1,8 +1,9 @@
 const db = require("../database/index");
+
 class StudentModel {
     async createTable() {
         try {
-          await db.query(`
+            await db.query(`
           CREATE TABLE IF NOT EXISTS students (
           id SERIAL PRIMARY KEY,
           email VARCHAR(255) NOT NULL UNIQUE,
@@ -22,7 +23,7 @@ class StudentModel {
     async createStudent(email, password, firstName, lastName, age, countryId, cityId) {
         try {
             const student = await db.query(
-                `INSERT INTO students (email, password, firstName, lastName, age, countryId, cityId) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *` ,
+                `INSERT INTO students (email, password, firstName, lastName, age, countryId, cityId) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
                 [email, password, firstName, lastName, age, countryId, cityId]
             );
 
@@ -32,24 +33,34 @@ class StudentModel {
         }
     }
 
-    async getAllStudents() {
+    async getAllStudents(offset, limit) {
         try {
-            const students = await db.query(`
-                 SELECT 
-                    students.id AS student_id,
-                    students.email AS student_email,
-                    students.firstName AS student_firstName,
-                    students.lastName AS student_lastName,
-                    students.age AS student_age,
-                    countries.id AS country_id,
-                    countries.name AS country_name,
-                    cities.id AS city_id,
-                    cities.name AS city_name
-                FROM students
-                JOIN countries ON students.countryId = countries.id
-                JOIN cities ON students.cityId = cities.id
-            `);
-            return students.rows.map(row => ({
+            const studentQuery = `
+            SELECT 
+                students.id AS student_id,
+                students.email AS student_email,
+                students.firstName AS student_firstName,
+                students.lastName AS student_lastName,
+                students.age AS student_age,
+                countries.id AS country_id,
+                countries.name AS country_name,
+                cities.id AS city_id,
+                cities.name AS city_name
+            FROM students
+            JOIN countries ON students.countryId = countries.id
+            JOIN cities ON students.cityId = cities.id
+            ORDER BY students.id
+            OFFSET $1 LIMIT $2;
+        `;
+
+            const countQuery = `
+            SELECT COUNT(*) AS total_count
+            FROM students;
+        `;
+            const studentsResult = await db.query(studentQuery, [offset, limit]);
+            const countResult = await db.query(countQuery);
+            const totalCount = parseInt(countResult.rows[0].total_count, 10);
+            const students = studentsResult.rows.map(row => ({
                 id: row.student_id,
                 email: row.student_email,
                 firstName: row.student_firstname,
@@ -64,6 +75,10 @@ class StudentModel {
                     name: row.city_name
                 }
             }));
+            return {
+                students,
+                totalCount
+            }
         } catch (error) {
             throw error;
         }
@@ -125,4 +140,4 @@ class StudentModel {
     }
 }
 
-module.exports =  new StudentModel();
+module.exports = new StudentModel();

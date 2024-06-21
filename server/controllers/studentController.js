@@ -25,11 +25,15 @@ class StudentController {
 
     async getAllStudents(req, res) {
         try {
-            const students = await StudentModel.getAllStudents();
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const offset = (page - 1) * limit;
+
+            const students = await StudentModel.getAllStudents(offset, limit);
 
             res.status(200).json(students);
         } catch (error) {
-            res.status(500).json({error: error.message});
+            res.status(500).json({ error: error.message });
         }
     }
 
